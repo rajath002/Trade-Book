@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_new/pages/auth/auth.dart';
+import 'package:flutter_new/provider/appwrite_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:appwrite/appwrite.dart';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_new/pages/add_trade_page.dart';
 import 'package:flutter_new/pages/edit_trade_page.dart';
 import 'package:flutter_new/pages/trade_list_page.dart';
 import 'package:flutter_new/provider/trade_provider.dart';
-import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
+  Client client = Client();
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => TradeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AppwriteProvider(client)),
+        ChangeNotifierProvider(create: (context) => TradeProvider()),
+      ],
       child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  // const MyApp({super.key});
   const MyApp({super.key});
 
   // This widget is the root of your application.
@@ -26,10 +37,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // home: const MyHomePage(title: 'Trades'),
       // Define your page routes here
       routes: {
-        '/': (context) => const TradeListPage(),
+        '/': (context) => AuthPage(),
+        '/list': (context) => const TradeListPage(),
         '/add_trade': (context) => AddTradePage(),
         '/edit_trade': (context) => const EditTradePage(),
       },
@@ -49,6 +60,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   void _addNewTrade() {
     Navigator.pushNamed(context, '/add_trade');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<TradeProvider>(context, listen: false);
+    provider.readData();
   }
 
   @override

@@ -3,18 +3,24 @@ import 'package:provider/provider.dart';
 
 import '../provider/trade_provider.dart';
 
+import '../widgets/appbar.dart';
+import '../widgets/StockAutoComplete.dart';
+
 class AddTradePage extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController modeController = TextEditingController();
+  final TextEditingController closingPriceController = TextEditingController();
 
   AddTradePage({super.key});
+
+  void getName(String name) => nameController.text = name;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Trade'),
+      appBar: const TradeAppBar(
+        title: 'Add Trade',
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -22,9 +28,10 @@ class AddTradePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormField(
-                controller: nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
+              StockAutoComplete(
+                initialValue: "",
+                callback: getName,
+                labelText: "Stock name",
               ),
               TextFormField(
                 controller: priceController,
@@ -36,6 +43,10 @@ class AddTradePage extends StatelessWidget {
                 decoration:
                     const InputDecoration(labelText: 'Mode (buy or sell)'),
               ),
+              TextFormField(
+                controller: closingPriceController,
+                decoration: const InputDecoration(labelText: 'Closing Price'),
+              ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
@@ -44,6 +55,8 @@ class AddTradePage extends StatelessWidget {
                   final name = nameController.text;
                   final price = double.tryParse(priceController.text) ?? 0.0;
                   final mode = modeController.text;
+                  final closingPrice =
+                      double.tryParse(closingPriceController.text) ?? 0.0;
 
                   if (name.isNotEmpty &&
                       price > 0 &&
@@ -53,6 +66,7 @@ class AddTradePage extends StatelessWidget {
                       name: name,
                       price: price,
                       mode: mode,
+                      closingPrice: closingPrice ?? 0.0,
                     );
                     Navigator.pop(context); // Return to the previous screen
                   }

@@ -3,16 +3,27 @@ import 'package:flutter_new/models/trade.dart';
 import 'package:flutter_new/provider/trade_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/appbar.dart';
+
+TextStyle myTextStyle = const TextStyle(
+  color: Colors.white, // Set text color to red
+  fontSize: 16.0, // Set font size
+);
+
 class TradeListPage extends StatelessWidget {
   const TradeListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final tradeProvider = Provider.of<TradeProvider>(context, listen: false);
+    // final provider = Provider.of<TradeProvider>(context, listen: false);
 
+    tradeProvider.readData();
     final trades = tradeProvider.trades;
     return Scaffold(
-      appBar: AppBar(title: const Text('Trade List')),
+      appBar: const TradeAppBar(
+        title: 'Add Trade',
+      ),
       body: TradeList(
         trades: trades,
       ),
@@ -86,14 +97,53 @@ class _TradeListState extends State<TradeList> {
           onDismissed: (direction) {
             _deleteTrade(index, tradeProvider);
           },
-          child: ListTile(
-            title: Text(trade.name),
-            subtitle: Text(
-                'Price: \$${trade.price.toStringAsFixed(2)} - ${trade.mode}'),
-            trailing: Text(
-              '${trade.time.hour}:${trade.time.minute}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListTile(
+                title: Text(trade.name),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        'Price: \$${trade.price.toStringAsFixed(2)} - ${trade.mode}'),
+                    Row(
+                      children: [
+                        const Text("Position : "),
+                        Text(trade.closingPrice != 0 && trade.result != 0 ? "Closed" : "Open")
+                      ],
+                    ),
+                  ],
+                ),
+                trailing: Column(
+                  children: [
+                    Text(
+                      '${trade.time.hour}:${trade.time.minute}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                      decoration: BoxDecoration(
+                        color: trade.result == 0.0
+                            ? Colors.grey
+                            : (trade.result > 0
+                            ? Colors.green
+                            : Colors.redAccent), // Set background color
+                        borderRadius: BorderRadius.circular(
+                          10.0,
+                        ), // Add rounded corners with radius of 10.0
+                      ),
+                      child: Text(
+                        trade.result.toString(),
+                        style: myTextStyle,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         );
       },

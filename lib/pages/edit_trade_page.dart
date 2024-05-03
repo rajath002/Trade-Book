@@ -3,6 +3,8 @@ import 'package:flutter_new/models/trade.dart';
 import 'package:flutter_new/provider/trade_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/appbar.dart';
+
 class EditTradePage extends StatefulWidget {
   // Define a constructor to pass the trade data to the page
   // final Trade trade;
@@ -18,6 +20,7 @@ class _EditTradePageState extends State<EditTradePage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController modeController = TextEditingController();
+  final TextEditingController closingPriceController = TextEditingController();
 
   @override
   void initState() {
@@ -33,9 +36,7 @@ class _EditTradePageState extends State<EditTradePage> {
     priceController.text = trade.price.toStringAsFixed(2);
     modeController.text = trade.mode;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Trade'),
-      ),
+      appBar: const TradeAppBar(title: 'Edit Trade',),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -55,6 +56,11 @@ class _EditTradePageState extends State<EditTradePage> {
                 controller: modeController,
                 decoration:
                     const InputDecoration(labelText: 'Mode (buy or sell)'),
+              ),
+              TextFormField(
+                controller: closingPriceController,
+                decoration:
+                const InputDecoration(labelText: 'Closing Price'),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -76,6 +82,7 @@ class _EditTradePageState extends State<EditTradePage> {
     final String updatedName = nameController.text;
     final double updatedPrice = double.tryParse(priceController.text) ?? 0.0;
     final String updatedMode = modeController.text;
+    final double closingPrice = double.tryParse(closingPriceController.text) ?? 0.0;
 
     // Update the trade data in the original list or Provider
     // Call the updateTrade method from the provider to update the trade
@@ -86,6 +93,7 @@ class _EditTradePageState extends State<EditTradePage> {
       name: updatedName,
       price: updatedPrice,
       mode: updatedMode,
+      closingPrice: closingPrice
     );
     // Navigate back to the previous screen
     Navigator.of(context).pop();
