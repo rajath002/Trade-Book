@@ -1,16 +1,25 @@
-# flutter_new
+# Trade Book
 
-A new Flutter project.
+Trade Book is a Flutter project that helps you keep track of your trades.
+
+This README file provides a brief overview of the project and instructions on how to get started.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+To get started with Trade Book, follow these steps:
 
-A few resources to get you started if this is your first Flutter project:
+1. Clone this repository to your local machine.
+2. Add the following environment variables to your `.env` file:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```bash
+AW_ENDPOINT = '';
+AW_PROJECT = '';
+AW_DATABASE_ID = '';
+AW_COLLECTION_ID = '';
+```
+3. Run `flutter pub get` to install the required dependencies.
+4. Run `flutter run` to start the app.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+That’s it! You should now be able to use Trade Book to keep track of your trades.
+
+If you have any questions or issues, please don’t hesitate to reach out to us.
